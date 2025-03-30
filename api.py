@@ -1,30 +1,40 @@
 from fastapi import FastAPI
 import random
 import time
+import os
 
 app = FastAPI()
 
-@app.get("/")
-def read_root():
-    return {"message": "API is working!"}
-
-def generate_sensor_data():
-    """Simulates rover sensor data"""
+def generate_rover_data():
+    """Simulates rover sensor data for disaster scenarios"""
     return {
         "timestamp": time.time(),
-        "rover_id": f"Rover-{random.randint(100, 999)}",
-        "soil_moisture": round(random.uniform(20, 80), 2),
-        "soil_pH": round(random.uniform(5.5, 7.5), 2),
-        "temperature": round(random.uniform(10, 40), 2),
-        "battery_level": round(random.uniform(10, 100), 2)
+        "rover_id": f"RescueRover-{random.randint(100, 999)}",
+        "position": {
+            "x": round(random.uniform(0, 100), 2),
+            "y": round(random.uniform(0, 100), 2)
+        },
+        "ultrasonic_distance": round(random.uniform(0.5, 5.0), 2),
+        "ir_signal_strength": round(random.uniform(0, 100), 2),
+        "rfid_detected": random.choice([True, False]),
+        "accelerometer": {
+            "x": round(random.uniform(-1, 1), 2),
+            "y": round(random.uniform(-1, 1), 2),
+            "z": round(random.uniform(-1, 1), 2)
+        },
+        "battery_level": round(random.uniform(10, 100), 2),
+        "communication_status": random.choice(["Connected", "Intermittent", "Lost"])
     }
 
-@app.get("/api/rover-data")
+@app.get("/")
+def read_root():
+    return {"message": "Disaster Rover API is running!"}
+
+@app.get("/api/disaster-rover-data")
 def get_rover_data():
-    return generate_sensor_data()
+    return generate_rover_data()
 
 if __name__ == "__main__":
     import uvicorn
-    import os
-    port = int(os.environ.get("PORT", 8080))  # Use Railway's assigned PORT
+    port = int(os.environ.get("PORT", 8080))  # Use Railway-assigned port or default to 8080
     uvicorn.run(app, host="0.0.0.0", port=port)
