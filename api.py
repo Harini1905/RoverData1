@@ -1,20 +1,12 @@
 from fastapi import FastAPI
+import random
+import time
 
 app = FastAPI()
 
 @app.get("/")
 def read_root():
     return {"message": "API is working!"}
-
-@app.get("/api/rover-data")
-def get_rover_data():
-    return {"rover_data": "Sample Data"}
-
-
-import random
-import time
-
-app = FastAPI()
 
 def generate_sensor_data():
     """Simulates rover sensor data"""
@@ -33,4 +25,6 @@ def get_rover_data():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=5000)
+    import os
+    port = int(os.environ.get("PORT", 8080))  # Use Railway's assigned PORT
+    uvicorn.run(app, host="0.0.0.0", port=port)
