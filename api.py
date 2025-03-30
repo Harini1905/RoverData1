@@ -1,4 +1,16 @@
 from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"message": "API is working!"}
+
+@app.get("/api/rover-data")
+def get_rover_data():
+    return {"rover_data": "Sample Data"}
+
+
 import random
 import time
 
